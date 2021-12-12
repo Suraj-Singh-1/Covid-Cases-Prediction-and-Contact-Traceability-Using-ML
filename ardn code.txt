@@ -1,0 +1,115 @@
+#include <NMEAGPS.h>
+#include “Adafruit_FONA.h"
+#include <SoftwareSerial.h>
+#include <Wire.h>
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
+
+#define FONA_BX 5
+#define FONA_TX 4
+#define FONA_RST 11
+#define I2C_ADDRESS 0x3C
+#define RST_PIN -1
+
+SSD1306AsciiWize oled;
+int buzzerpin=13;
+
+SoftwareSerial fonaSS = SoftwareSerial (FONA_TX, FONA_RX);
+SoftwareSerial *fonaSerial = &fonaSS;
+
+#define gpsPort Serial
+#define GPS_PORT_NAME "Serial"
+#define DEBUG_PORT Serial
+
+#if !defined( NMEAGPS_PARSE_RMC ) & \
+!defined ( NMEAGPS_PARSE_GGA ) & \
+!defined ( NMEAGPS_PARSE_GLL )
+	#error You must uncomment at least one of NMEAGPS_PARSE_RMC, NMEAGPS_PARSE_GGA or NMEAGPS_PARSE GLL in MMEAGPS cfg.h!
+#endif
+
+// The base location, in degrees + 10
+//NecGPS: :Location_t base( 19.16361884102732, 72.99636347315754 );
+NeoGPS: :Location_t home( 19.16361884102732, 72.99636347315754);
+NeoGPS: :Location_t restrictl(19.16364164319492, 72.99672288916355);
+NeoGPS: :Location_t restrict2(19.164569143194008, 72.99712596471453);
+NeoGPS: :Location_t restrict3(19.16282445962543, 72.99696071173129);
+
+void setup()
+{
+DEBUG_PORT.begin (9600) ;
+DEBUG_PORT.printin( F("NMEAdistance.ino starved.”) )i
+DEBUG_PORT.println( F("Locking for GPS device on " GPS_PORT_NAME) );
+pinMode (13, INPUT) ;
+gpsPort.begin (9600);
+fonaSerial->begin (4800) ;
+if (1 fona.begin(*fonaSerial)) {
+Serial.princln(F("Couldn't find FONA"));
+while(1);
+}
+Serial.println(F("FONA is OK™));
+
+// Print SIM card IMEI number.
+char imei[16] = {0}; // MUST use a 16 character buffer for DMEI!
+uint8_t imeilen = fona.getIMEI (imei);
+if (imeiLen > 0) {
+Serial.print("SIM card IMEI: "); Serial.println(imei);
+}
+fonaSerial->print ("AT+CNMI=2,1\r\n"); //set up the FONA to send a +CMTI notification when an SMS is received
+Serial.println("FONA Ready™);
+oled.begin(&Adafruit128x64, I2C_ADDRESS);
+//0led. setFont (TimesNewReman1€_bold) ;
+oled.setFont (Callibrill_bold);
+} // setup
+
+void loop()
+{
+while (gps.available( gpsPort )) {
+gps_fix fix = gps.read(); // save the latest
+// When we have a location, calculate how far away we are from the base location.
+
+float rangel = fix.location.DistanceMiles( home );
+float range2 = fix.location.DistanceMiles( restrictl );
+float range3 = fix.location.DistanceMiles( restrict2 );
+float range4 = fix location.DistanceMiles( restrict3 );
+
+DEBUG_PORT.print ( F("Range:l ") );
+DEBUG_PORT.print ( rangel );
+DEBUG_PORT.print ( F("Range:2 ") );
+DEBUG_PORT.print ( range2 );
+DEBUG_PORT.print( F("Range:3") );
+DEBUG_PORT.print ( range3 );
+DEBUG_PORT.println( "range in miles" );
+
+oled.clear();
+oled.println(" Distance from safe Zone");
+oled.print (rangel);
+ocled.print("miles\n");
+oled.print ((rangel*1.609));
+oled.print (" km\n");
+
+if (((range2*1.609)<0.19) or((range3+1.603)<0.1) or ((range4+1.603)<0.1)){
+oled.println("In infected area");
+if (!fona.sendSMS("7379952235", "Hey, Ashwini has entred in infected area")) 
+{
+Serial.println(F("Failed"));
+} 
+else {
+Serial.println(F("Sent!"));
+delay(4000);
+}
+}
+
+if (((range2*1.609)>0.19)){
+digitalWrite(13,HIGH);
+oled.println("roaming outside home");
+if (!fona.sendSMS("7979952235", "Hey, This man going out of home ")) {
+Serial.println(F("Failed"));
+} else {
+Serial println(F("Sent!"));
+delay(4000);
+}
+}else{
+
+
+
+ 

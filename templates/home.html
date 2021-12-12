@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/node_modules/bootstrap-social/bootstrap-social.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Prediction model</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand-sm fixed-top">  
+        <div class="container">             
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+                <span class="navbar-toggler-icon"> </span>
+            </button>
+            <a class="navbar-brand mr-auto" href="#"><img src="static/img/logo.png" height="41" width="41"></a>
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a class="nav-link" href="#"> <span class="fa fa-home fa-lg"></span> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./aboutus.html"> <span class="fa fa-info fa-lg"></span> About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"> <span class="fa fa-list fa-lg"> </span> Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contactus.html"> <span class="fa fa-address-card fa-lg"></span> Contact</a></li>
+                </ul> 
+                <span class="navbar-text" id="loginbtn">
+                  
+                        <span class="fa fa-sign-in" ></span> Login
+                    
+                </span> 
+            </div>                      
+        </div>
+    </nav> 
+
+      <header class="jumbotron banner">
+        <div class="container">
+            <div>
+                <div class="row  row-header bk">
+                <div class="col-12 col-sm-3 align-self-center">
+                    <img src="/static/img/logo.png" class="img-fluid">
+                </div>
+                <div class="col-12 col-sm-6 align-self-center">
+                    <h1>Lokmanya Tilak College of Engineering</h1>
+                    <p>Covid Cases Prediction and Contact Traceability Using ML</p>
+                </div>
+                <div class="col-12 col-sm-3 align-self-center">
+                    <img src="/static/img/logo.png" class="img-fluid">
+                </div>
+                
+            </div>
+            </div>
+            
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="row">
+            <ol class="col-12 breadcrumb">
+                <li class="breadcrumb-item">Home</li>
+                
+            </ol>
+            <div>
+               <h3>About Us</h3>
+               <hr>
+            </div>
+        </div>
+        <div class="container">
+        <div class="row per">
+            <div class="col-md-3 hidden-md"></div>
+            <div class="col-md-6">
+
+                    <label for="cars">Select state:</label>
+
+                    <select id="cars">
+                      <option value="anp">Andhra Pradesh</option>
+                      <option value="arp">Arunachal Pradesh</option>
+                      <option value="as">Assam</option>
+                      <option value="bh">Bihar</option>
+                      <option value="ch">Chhattisgarh</option>
+                      <option value="goa">Goa</option>
+                      <option value="guj">Gujarat</option>
+                      <option value="har">Haryana</option>
+                      <option value="hp">Himachal Pradesh</option>
+                      <option value="jar">Jharkhand</option>
+                      <option value="kar">Karnataka</option>
+                      <option value="ker">Kerala</option>
+                      <option value="mp">Madhya Pradesh</option>
+                      <option value="mh" selected>Maharashtra</option>
+                      <option value="mani">Manipur</option>
+                      <option value="meg">Meghalaya</option>
+                      <option value="miz">Mizoram</option>
+                      <option value="nag">Nagaland</option>
+                      <option value="od">Odisha</option>
+                      <option value="pnj">Punjab</option>
+                      <option value="rj">Rajasthan</option>
+                      <option value="sik">Sikkim</option>
+                      <option value="tn">Tamil Nadu</option>
+                      <option value="tel">Telangana</option>
+                      <option value="tri">Tripura</option>
+                      <option value="up">Uttar Pradesh</option>
+                      <option value="uk">Uttarakhand</option>
+                      <option value="ben">West Bengal</option>
+                    </select>
+            </div>    
+            <div class="col-md-3 hidden-md"></div>
+        </div>
+
+        <br>
+        {{ prediction_text }}
+    </div>
+
+    </div>
+    
+  
+    <script src="/static/node_modules/jquery/dist/jquery.slim.min.js"></script>
+    <script src="/static/node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/static/js/scripts.js"></script>
+</body>
+</body>
+</html>

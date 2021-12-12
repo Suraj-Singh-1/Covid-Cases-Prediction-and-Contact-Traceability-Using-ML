@@ -1,0 +1,112 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+import seaborn as sns
+import datetime as dt
+import numpy as np
+import pickle
+from bs4 import BeautifulSoup
+import requests
+
+downloadUrl = 'https://www.kaggle.com/sudalairajkumar/covid19-in-india/download'
+req = requests.get(downloadUrl)
+filename = req.url[downloadUrl.rfind('/'):]
+print(filename)
+
+with open(filename,'wb') as f:
+    for chunk in req.iter_content(chunk_size=8192):
+        if chunk:
+            f.write(chunk)
+
+df = pd.read_csv('covid_19_india.csv', parse_dates=['Date'], dayfirst=True)
+df.head()
+
+df = df[['Date', 'State/UnionTerritory','Cured','Deaths','Confirmed']]
+df.columns = ['date', 'state','cured','deaths','confirmed']
+df.tail()
+
+today = df[df.date == '2021-08-11']
+today
+
+max_confirmed_cases=today.sort_values(by="confirmed",ascending=False)
+max_confirmed_cases
+
+top_states_confirmed=max_confirmed_cases[0:5]
+sns.set(rc={'figure.figsize':(15,10)})
+sns.barplot(x="state",y="confirmed",data=top_states_confirmed,hue="state")
+#plt.show()
+
+max_death_cases=today.sort_values(by="deaths",ascending=False)
+max_death_cases
+top_states_death=max_death_cases[0:5]
+sns.set(rc={'figure.figsize':(15,10)})
+sns.barplot(x="state",y="deaths",data=top_states_death,hue="state")
+#plt.show()
+
+max_cured_cases=today.sort_values(by="cured",ascending=False)
+max_cured_cases
+
+top_states_cured=max_cured_cases[0:5]
+sns.set(rc={'figure.figsize':(15,10)})
+sns.barplot(x="state",y="cured",data=top_states_cured,hue="state")
+#plt.show()
+
+maha = df[df.state == 'Maharashtra']
+maha
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="confirmed",data=maha,color="g")
+#plt.show()
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="deaths",data=maha,color="r")
+#plt.show()
+
+kerala= df[df.state == 'Kerala']
+kerala
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="confirmed",data=kerala,color="g")
+#plt.show()
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="deaths",data=kerala,color="r")
+#plt.show()
+
+jk= df[df.state == 'Jammu and Kashmir']
+jk
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="confirmed",data=jk,color="g")
+#plt.show()
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.lineplot(x="date",y="deaths",data=jk,color="r")
+#plt.show()
+
+tests = pd.read_csv('StatewiseTestingDetails.csv')
+tests
+test_latest =  tests[tests.Date == '2021-08-10']
+test_latest
+
+max_tests_State=test_latest.sort_values(by="TotalSamples",ascending=False)
+max_tests_State
+
+sns.set(rc={'figure.figsize':(15,10)})
+sns.barplot(x="State",y="TotalSamples",data=max_tests_State[0:5],hue="State")
+#plt.show()
+
+from sklearn.model_selection import train_test_split
+maha
+maha['date']=maha['date'].map(dt.datetime.toordinal)
+maha.head()
+x=maha['date']
+y=maha['confirmed']
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3)
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(np.array(x_train).reshape(-1,1),np.array(y_train).reshape(-1,1))
+maha.tail()
+mh =lr.predict(np.array([[738020]]))
+
+
+pickle.dump(mh, open("model.pkl","wb"))
